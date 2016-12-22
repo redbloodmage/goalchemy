@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/redbloodmage/goalchemy/components"
 	"github.com/redbloodmage/goalchemy/recipes"
@@ -19,6 +20,8 @@ var (
 func primaryRecursion(prompt string) {
 
 	fmt.Println("Started primaryRecursion()")
+	//	var mPromptOne string
+	//	var mPromptTwo string
 
 	switch prompt {
 
@@ -58,7 +61,20 @@ func primaryRecursion(prompt string) {
 			Select the first component from the compSlice.  Save it to a var.  Select the second component
 			from the compSlice and save that to another var.  When both are selected send it to a combine method
 		*/
+		Mscanner := bufio.NewScanner(os.Stdin)
+
+		//TODO: START HERE NEXT REVISIT
 		fmt.Println("Select the First Component to Merge.", compSlice)
+		Mscanner.Scan()
+		//		mPromptOne = Mscanner.Text()
+		arr := []string{"test", "some_other_test", "foo_etc"}
+		nofoos := []string{}
+		for i := range arr {
+			if !strings.HasPrefix(arr[i], "foo_") && len(arr) <= 7 {
+				nofoos = append(nofoos, arr[i])
+			}
+		}
+		fmt.Println(nofoos) // [test]
 		scanner := bufio.NewScanner(os.Stdin)
 		fmt.Println("Choose one of the following: ")
 		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (M)erge (Q)uit")
