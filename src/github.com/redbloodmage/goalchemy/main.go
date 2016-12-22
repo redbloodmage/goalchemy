@@ -12,6 +12,8 @@ import (
 
 var (
 	compSlice = make([]components.Component, 5)
+	spellList = make([]spells.Spell, 2)
+	grimore   = make([]recipes.Recipe, 2)
 )
 
 func primaryRecursion(prompt string) {
@@ -27,37 +29,57 @@ func primaryRecursion(prompt string) {
 		fmt.Println(compSlice)
 		scanner := bufio.NewScanner(os.Stdin)
 		fmt.Println("Choose one of the following: ")
-		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (Q)uit")
+		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (M)erge (Q)uit")
 		scanner.Scan()
 		prompt = scanner.Text()
 		primaryRecursion(prompt)
 	case "S", "s":
 		fmt.Println("S selected")
+		fmt.Println(spellList)
 		scanner := bufio.NewScanner(os.Stdin)
 		fmt.Println("Choose one of the following: ")
-		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (Q)uit")
+		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (M)erge (Q)uit")
 		scanner.Scan()
 		prompt = scanner.Text()
 		primaryRecursion(prompt)
 	case "G", "g":
-		fmt.Println("G selected")
+		fmt.Println("G Selected:")
+		fmt.Println(grimore)
 		scanner := bufio.NewScanner(os.Stdin)
 		fmt.Println("Choose one of the following: ")
-		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (Q)uit")
+		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (M)erge (Q)uit")
 		scanner.Scan()
 		prompt = scanner.Text()
 		primaryRecursion(prompt)
+
+	case "M", "m":
+		fmt.Println("M selected")
+		/*
+			Select the first component from the compSlice.  Save it to a var.  Select the second component
+			from the compSlice and save that to another var.  When both are selected send it to a combine method
+		*/
+		fmt.Println("Select the First Component to Merge.", compSlice)
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("Choose one of the following: ")
+		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (M)erge (Q)uit")
+		scanner.Scan()
+		prompt = scanner.Text()
+		primaryRecursion(prompt)
+
 	default:
 		fmt.Println("Default Fired")
 		scanner := bufio.NewScanner(os.Stdin)
 		fmt.Println("Choose one of the following: ")
-		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (Q)uit")
+		fmt.Println("(C)omponents,(S)pellist,(G)rimore, (M)erge (Q)uit")
 		scanner.Scan()
 		prompt = scanner.Text()
 		primaryRecursion(prompt)
 
 	}
 } //End primaryRecursion
+
+//TODO: Create mergeComponents function
+//func mergeComponents()
 
 func main() {
 
@@ -82,13 +104,15 @@ func main() {
 	//Creating Snow Component via Method
 	Snow := components.NewComponent("Snow", "Blue", "Water")
 
+	//Some appended items are pointers vs. literal depending on how I made them. Setters vs. Constructor
 	compSlice = append(compSlice, SpringWater, Flame, *Sand, *SunBeam, *Snow)
-	//Creating the RegenLife Recipe
-	x := make([]components.Component, 5)
-	x = append(x, SpringWater, *SunBeam)
-	RegenLifeRecipe := recipes.NewRecipe("Recipe of Regeneration", x, "Green")
 
-	//Creating Regeneration Spell
+	//Creating the RegenLife Recipe
+	regenLifeComps := make([]components.Component, 5)
+	regenLifeComps = append(regenLifeComps, SpringWater, *SunBeam)
+	RegenLifeRecipe := recipes.NewRecipe("Recipe of Regeneration", regenLifeComps, "Green")
+
+	//Creating RegenLife Spell
 	RegenLife := spells.Spell{}
 	RegenLife.SetName("Recipe of Regeneration")
 	RegenLife.SetColor("Green")
@@ -106,22 +130,16 @@ func main() {
 	FlameBeam.SetColor("Red")
 	FlameBeam.SetRecipe(*FlameBeamRecipe)
 
-	// Printing out the creations (Spells, Components, etc.)
-	fmt.Println("\nComponents:\n")
-	fmt.Println(SpringWater)
-	fmt.Println(SunBeam)
-	fmt.Println(Flame)
-
-	fmt.Println("\nSpells:\n")
-	fmt.Println(RegenLife)
-	fmt.Println(FlameBeam)
-
+	//Creating Spell list aggregating all spells into one slice
+	spellList = append(spellList, FlameBeam, RegenLife)
+	//Creating Grimore (Recipe List) aggregating all recipes
+	grimore = append(grimore, *RegenLifeRecipe, *FlameBeamRecipe)
 	//compMap := make(map[string][]Component)
 
 	var initialPrompt string
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Choose one of the following: ")
-	fmt.Println("(C)omponents,(S)pellist,(G)rimore, (Q)uit")
+	fmt.Println("(C)omponents,(S)pellist,(G)rimore, (M)erge (Q)uit")
 	scanner.Scan()
 	initialPrompt = scanner.Text()
 	primaryRecursion(initialPrompt)
